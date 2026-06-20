@@ -6,65 +6,51 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-let students = [
-  { id: 1, name: "Ravi", course: "BCA", marks: 85 },
-  { id: 2, name: "Priya", course: "BCA", marks: 90 }
+let tasks = [
+  { id: 1, title: "Complete assignment", status: "Pending" },
+  { id: 2, title: "Submit project", status: "Completed" }
 ];
 
-// Home Route
 app.get("/", (req, res) => {
-  res.send("Student Management Backend is running");
+  res.send("Task Manager Backend is running");
 });
 
-// Get All Students
-app.get("/students", (req, res) => {
-  res.json(students);
+app.get("/tasks", (req, res) => {
+  res.json(tasks);
 });
 
-// Add New Student
-app.post("/students", (req, res) => {
-  const newStudent = {
-    id: students.length + 1,
-    name: req.body.name,
-    course: req.body.course,
-    marks: req.body.marks
+app.post("/tasks", (req, res) => {
+  const newTask = {
+    id: tasks.length + 1,
+    title: req.body.title,
+    status: req.body.status
   };
 
-  students.push(newStudent);
-  res.json(newStudent);
+  tasks.push(newTask);
+  res.json(newTask);
 });
 
-// Update Student
-app.put("/students/:id", (req, res) => {
+app.put("/tasks/:id", (req, res) => {
   const id = parseInt(req.params.id);
+  const task = tasks.find(t => t.id === id);
 
-  const student = students.find(s => s.id === id);
-
-  if (!student) {
-    return res.status(404).json({
-      message: "Student not found"
-    });
+  if (!task) {
+    return res.status(404).json({ message: "Task not found" });
   }
 
-  student.name = req.body.name || student.name;
-  student.course = req.body.course || student.course;
-  student.marks = req.body.marks || student.marks;
+  task.title = req.body.title || task.title;
+  task.status = req.body.status || task.status;
 
-  res.json(student);
+  res.json(task);
 });
 
-// Delete Student
-app.delete("/students/:id", (req, res) => {
+app.delete("/tasks/:id", (req, res) => {
   const id = parseInt(req.params.id);
+  tasks = tasks.filter(task => task.id !== id);
 
-  students = students.filter(student => student.id !== id);
-
-  res.json({
-    message: "Student deleted successfully"
-  });
+  res.json({ message: "Task deleted successfully" });
 });
 
-// Start Server (Render Compatible)
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
