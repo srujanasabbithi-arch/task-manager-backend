@@ -4,18 +4,26 @@ const cors = require("cors");
 const app = express();
 
 app.use(cors());
+app.use(express.json());
 
+// Home Page
 app.get("/", (req, res) => {
   res.send("Task Planner Backend is running");
 });
 
+// Generate Task Plan
 app.get("/generate-tasks", (req, res) => {
   const days = parseInt(req.query.days);
   const tasks = req.query.tasks?.split(",");
 
+  // Default output if no parameters are provided
   if (!days || !tasks) {
     return res.json({
-      message: "Please provide days and tasks"
+      "Day 1": "Java",
+      "Day 2": "Python",
+      "Day 3": "SQL",
+      "Day 4": "Java",
+      "Day 5": "Python"
     });
   }
 
